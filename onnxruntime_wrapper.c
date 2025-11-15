@@ -215,6 +215,34 @@ OrtStatus *AppendExecutionProviderOpenVINOV2(OrtSessionOptions *o,
     values, num_keys);
 }
 
+OrtStatus *AppendExecutionProviderDNNL(OrtSessionOptions* options,
+    const char **keys, const char **values, int num_keys) {
+
+    OrtDnnlProviderOptions* dnnl_opts = NULL;
+
+    OrtStatus* status = ort_api->CreateDnnlProviderOptions(&dnnl_opts);
+    if (status != NULL) return status;
+
+    status = ort_api->UpdateDnnlProviderOptions(
+        dnnl_opts,
+        keys,
+        values,
+        num_keys
+    );
+    if (status != NULL) {
+        ort_api->ReleaseDnnlProviderOptions(dnnl_opts);
+        return status;
+    }
+
+    status = ort_api->SessionOptionsAppendExecutionProvider_Dnnl(
+        options,
+        dnnl_opts
+    );
+
+    ort_api->ReleaseDnnlProviderOptions(dnnl_opts);
+    return status;
+}
+
 OrtStatus *AppendExecutionProvider(OrtSessionOptions *o,
   const char *provider_name, const char **keys, const char **values,
   int num_keys) {

@@ -155,6 +155,10 @@ OrtStatus *AppendExecutionProviderDirectML(OrtSessionOptions *o,
 OrtStatus *AppendExecutionProviderOpenVINOV2(OrtSessionOptions *o,
   const char **keys, const char **values, int num_keys);
 
+// Wraps ort_api->AppendExecutionProvider_Dnnl
+OrtStatus *AppendExecutionProviderDNNL(OrtSessionOptions* options,
+    const char **keys, const char **values, int num_keys);
+
 // Wraps ort_api->AppendExecutionProvider
 OrtStatus *AppendExecutionProvider(OrtSessionOptions *o,
   const char *provider_name, const char **keys, const char **values,

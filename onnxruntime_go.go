@@ -1567,6 +1567,26 @@ func (o *SessionOptions) AppendExecutionProviderOpenVINO(
 	return nil
 }
 
+// AppendExecutionProviderDnnl enables the oneDNN (DNNL) execution provider.
+// useArena = true usually brings better performance.
+func (o *SessionOptions) AppendExecutionProviderDNNL(options map[string]string) error {
+	var keysPtr, valuesPtr **C.char
+	if len(options) != 0 {
+		keys, values := mapToCStrings(options)
+		defer freeCStrings(keys)
+		defer freeCStrings(values)
+		keysPtr = &(keys[0])
+		valuesPtr = &(values[0])
+	}
+
+	status := C.AppendExecutionProviderDNNL(o.o, keysPtr, valuesPtr,
+		C.int(len(options)))
+	if status != nil {
+		return statusToError(status)
+	}
+	return nil
+}
+
 // Wraps the AppendExecutionProvider onnxruntime C API function. See the
 // documentation for that function for a list of all names and supported
 // options.
